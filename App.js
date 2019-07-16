@@ -16,7 +16,6 @@ const TelaInicial =(props) =>(
 );
 //Tela 2 
 const DetalheScreen =(props) =>(
-
     <View>
         <Text>Detalhes</Text>
         <Button
