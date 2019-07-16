@@ -1,10 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+
+import { AsyncStorage, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
 
 export class LoginScreen extends Component {
 
     state = {
-        fields: []
+        fields: [],
+        login: "rafael",
+        senha: "123456"
     };
 
     handleChange = nomeDoCampo => {
@@ -46,7 +49,29 @@ export class LoginScreen extends Component {
         }, 2000);
       }
 
-    
+      handleUserLogin = () => {
+        fetch("https://instalura-api.herokuapp.com/api/public/login",{
+          method: "POST",
+          body: JSON.stringify({
+            login: this.state.login, 
+            senha: this.state.senha
+          }),
+          headers:{
+            "Content-type": "application/json"
+          }
+        })
+          .then(repostaDoServidor => {
+            return repostaDoServidor.text();
+          })
+          .then(async token => {
+            AsyncStorage.setItem("TOKEN",  token);
+            const dado = await AsyncStorage.getItem("TOKEN");
+            console.warn(dado);
+          })
+          .catch(err => {
+            console.warn(err.messsage)
+          })
+      }
 
       render() {
 

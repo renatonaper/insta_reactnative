@@ -2,7 +2,7 @@ import React from "react";
 import {View, Text, Button} from "react-native";
 import { createBottomTabNavigator, createStackNavigator, createAppContainer, createSwitchNavigator } from "react-navigation";
 import Feed from "./Feed";
-import { AreaDeslogado } from "./modules/AreaDeslogado";
+import { AreaDeslogado } from "./src/modules/AreaDeslogado";
 
 //Tela 1
 const TelaInicial =(props) =>(
