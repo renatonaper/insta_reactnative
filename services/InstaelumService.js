@@ -1,13 +1,5 @@
 import {TokenManager} from "../infra/TokenManager";
-
-const HttpClient = {
-    post: (url, {body}) =>{
-        return fetch(url, {
-            method: "POST", body: JSON.stringify(body),
-            headers: {"Content-type": "application/json"}
-        });
-    }
-};
+import { HttpClient } from "../infra/HttpClient";
 
 async function login({login, senha}){
     return HttpClient.post("https://instalura-api.herokuapp.com/api/public/login",{

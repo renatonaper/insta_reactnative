@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import {  Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import {  Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import InstaelumService from "../../../services/InstaelumService";
+import { FormBuilder } from "../../components/FormBuilder";
 
 export class LoginScreen extends Component {
 
@@ -58,25 +59,53 @@ export class LoginScreen extends Component {
       render() {
 
         return (
-    
-          <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-            <Text style={styles.title}>Instaelum</Text>
-            {this.state.fields.length === 0 ? <ActivityIndicator /> : null}
-            {this.state.fields.map(field => {
-              return (
-                <TextInput
-                  key={field.id}
-                  onChangeText={this.handleChange(field.slug)}
-                  style={styles.formTextField}
-                  placeholder={field.title}
-                  secureTextEntry={field.type === "password" ? true : false}
-                />
-              );
-            })}
-            <TouchableOpacity onPress={this.handleUserLogin} style={styles.btn}>
-              <Text style={styles.textColor}>Logar</Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+          style={styles.container}
+          behavior="padding" enabled>
+            <FormBuilder
+              fields={[
+                  {
+                    id: 1, 
+                    name: "login",
+                    label: "Login", 
+                    type: "text",
+                    value: "renatonaper",
+                    syncValidators: [[
+                       "required", {} , "Este campo é obrigatório"
+                    ]]
+                  },
+                  {
+                    id: 2, 
+                    name: "idade",
+                    label: "Idade", 
+                    type: "number",
+                    value: "31",
+                    syncValidators: [[
+                       "required", {} , "Este campo é obrigatório"
+                    ]]
+                  }
+                ]
+              }
+              />
+          </KeyboardAvoidingView> 
+          // <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+          //   <Text style={styles.title}>Instaelum</Text>
+          //   {this.state.fields.length === 0 ? <ActivityIndicator /> : null}
+          //   {this.state.fields.map(field => {
+          //     return (
+          //       <TextInput
+          //         key={field.id}
+          //         onChangeText={this.handleChange(field.slug)}
+          //         style={styles.formTextField}
+          //         placeholder={field.title}
+          //         secureTextEntry={field.type === "password" ? true : false}
+          //       />
+          //     );
+          //   })}
+          //   <TouchableOpacity onPress={this.handleUserLogin} style={styles.btn}>
+          //     <Text style={styles.textColor}>Logar</Text>
+          //   </TouchableOpacity>
+          // </KeyboardAvoidingView>
     )
     
     }
