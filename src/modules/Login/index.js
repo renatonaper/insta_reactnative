@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-
-import { AsyncStorage, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import {  Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from "react-native";
+import InstaelumService from "../../../services/InstaelumService";
 
 export class LoginScreen extends Component {
 
     state = {
         fields: [],
-        login: "rafael",
-        senha: "123456"
+        login: "",
+        senha: ""
     };
 
     handleChange = nomeDoCampo => {
@@ -50,28 +50,10 @@ export class LoginScreen extends Component {
       }
 
       handleUserLogin = () => {
-        fetch("https://instalura-api.herokuapp.com/api/public/login",{
-          method: "POST",
-          body: JSON.stringify({
-            login: this.state.login, 
-            senha: this.state.senha
-          }),
-          headers:{
-            "Content-type": "application/json"
-          }
-        })
-          .then(repostaDoServidor => {
-            return repostaDoServidor.text();
-          })
-          .then(async token => {
-            AsyncStorage.setItem("TOKEN",  token);
-            const dado = await AsyncStorage.getItem("TOKEN");
-            console.warn(dado);
-          })
-          .catch(err => {
-            console.warn(err.messsage)
-          })
-      }
+        InstaelumService.login({senha: this.state.senha, login: this.state.login})
+        .then(() => {/* envio o usuairo para o fetch */})
+        .catch(err => {alert("Aconteceu algo");});
+      };
 
       render() {
 
