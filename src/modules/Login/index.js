@@ -70,9 +70,10 @@ export class LoginScreen extends Component {
                     label: "Login", 
                     type: "text",
                     value: "renatonaper",
-                    syncValidators: [[
-                       "required", {} , "Este campo é obrigatório"
-                    ]]
+                    syncValidators: [
+                        ["required", {} , "Este campo é obrigatório"],
+                        ["minlength", {min: 3} , "Por favor preencha a quantidade minima de 3 caracteres"],
+                      ]
                   },
                   {
                     id: 2, 
