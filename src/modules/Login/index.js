@@ -23,9 +23,6 @@ export class LoginScreen extends Component {
         });
     }
     
-    handleUserLogin = () => {
-            console.warn(this.state);
-    };
 
     componentDidMount() {
         const fields = [
@@ -50,9 +47,11 @@ export class LoginScreen extends Component {
         }, 2000);
       }
 
-      handleUserLogin = () => {
-        InstaelumService.login({senha: this.state.senha, login: this.state.login})
-        .then(() => {/* envio o usuairo para o fetch */})
+      handleUserLogin = values => {
+        InstaelumService.login({senha: values.senha, login: values.login})
+        .then(() => {
+          this.propss.navigation.navigate("Auth");
+        })
         .catch(err => {alert("Aconteceu algo");});
       };
 
@@ -63,13 +62,18 @@ export class LoginScreen extends Component {
           style={styles.container}
           behavior="padding" enabled>
             <FormBuilder
+              onSuccess={
+                values => {
+                  this.handleUserLogin(values);
+                }
+              }
               fields={[
                   {
                     id: 1, 
                     name: "login",
                     label: "Login", 
                     type: "text",
-                    value: "renatonaper",
+                    value: "",
                     syncValidators: [
                         ["required", {} , "Este campo é obrigatório"],
                         ["minlength", {min: 3} , "Por favor preencha a quantidade minima de 3 caracteres"],
@@ -77,10 +81,10 @@ export class LoginScreen extends Component {
                   },
                   {
                     id: 2, 
-                    name: "idade",
-                    label: "Idade", 
+                    name: "senha",
+                    label: "Senha", 
                     type: "number",
-                    value: "31",
+                    value: "",
                     syncValidators: [[
                        "required", {} , "Este campo é obrigatório"
                     ]]

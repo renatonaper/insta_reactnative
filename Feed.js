@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 import { Dimensions, Text, View, Image, ScrollView } from 'react-native';
 import CardPost from './src/components/CardPost';
 
-export default class Feed extends Component {
+export class FeedScreen extends Component {
+
+  static navigationOptions = {
+    title: "Instaelum"
+  };
+
   state = {
     posts: []
   };

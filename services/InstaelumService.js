@@ -7,6 +7,7 @@ async function login({login, senha}){
     })
     .then(respostaDoServidor => { return respostaDoServidor.text();})
     .then(async token => {
+        if (!token) throw new Error("Token Invalido")
         await TokenManager.setToken(token);
         console.warn(await TokenManager.getToken());
     });

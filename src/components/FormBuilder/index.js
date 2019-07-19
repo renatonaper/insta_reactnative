@@ -19,39 +19,91 @@ export class FormBuilder extends Component {
     }
 
     handleFormBuilderSubmit = () => {
-        console.warn("Devemos pegar os dados de TODOS os campos");
-    }
+        const validationsPromises = this.state.fields.map(field => {
+          return this.validateField(field, field.value);
+        });
+    
+    Promise.all(validationsPromises).then(() => {
+        const errors = this.state.errors;
+        const isAllFieldsValid = (isValid = Object.keys(errors).reduce(
+        (isValid, errorKey) => {
+            console.log(errorKey, errors[errorKey]);
+            if (errors[errorKey].length > 0) return false;
+            return isValid;
+        },
+        true
+        ));
 
-    handlerChange = fieldName => {
-        return novoValor => {
-           // console.warn("valor que foi digitado ", novoValor);
-            const fieldsAtualizados = this.state.fields.map(
-                field => {
-                    if (field.name === fieldName) return { ...field, value: novoValor };
-                    return field;
-                });
-            const currentField = this.state.fields.find(field =>{
-                return field.name === fieldName;
-            });
-            const errors = [];
-            currentField.syncValidators.forEach(syncValidators => {
-                const validatorType = syncValidators[0];
-                const validatorData = syncValidators[1];
-                const validatorMessage = syncValidators[2];
-                const isInvalidResult = validations[validatorType](
-                    novoValor,
-                    validatorData
-                );
-                if (isInvalidResult)
-                    errors.push({type: validatorType, message: validatorMessage});
-            });
-
-            this.setState(prevState => ({
-                fields: fieldsAtualizados, 
-                errors: {...prevState.errors,[fieldName]:errors}
-            }));
+        if (isAllFieldsValid) {
+        //console.warn("Values", this.getAllValues());
+        console.warn("onSuccess");
+        this.props.onSuccess && this.props.onSuccess(this.getAllValues());
+        } else {
+        console.warn("Você fez merda, errou!", errors);
         }
-    }
+    });
+    };
+    
+    handleChange = fieldName => {
+        return novoValor => {
+          // console.warn("Valor que foi digitado: ", novoValor);
+          const currentField = this.state.fields.find(field => {
+            return field.name === fieldName;
+          });
+    
+          this.validateField(currentField, novoValor);
+        };
+    };
+    
+    getAllValues = () => {
+        // [Array de algo] .map [Array de outra coisa] (com mesmo numero itens)
+        // [Array de algo] .reduce Qualquer dado
+        return this.state.fields.reduce((dadoFinal, item) => {
+          dadoFinal[item.name] = item.value;
+          return dadoFinal;
+        }, {}); // { login: omariosouto }
+      };
+
+
+
+
+  getAllValues = () => {
+    // [Array de algo] .map [Array de outra coisa] (com mesmo numero itens)
+    // [Array de algo] .reduce Qualquer dado
+    return this.state.fields.reduce((dadoFinal, item) => {
+      dadoFinal[item.name] = item.value;
+      return dadoFinal;
+    }, {}); // { login: omariosouto }
+  };
+
+  validateField = (currentField, novoValor) => {
+    const fieldName = currentField.name;
+    const errors = [];
+    currentField.syncValidators.forEach(syncValidator => {
+      const validatorType = syncValidator[0]; // required, minlength
+      const validatorData = syncValidator[1];
+      const validatorMessage = syncValidator[2];
+      const isInvalidResult = validations[validatorType](
+        novoValor,
+        validatorData
+      );
+      if (isInvalidResult)
+        errors.push({ type: validatorType, message: validatorMessage });
+    });
+
+    this.setState(
+      prevState => ({
+        fields: prevState.fields.map(field => {
+          if (field.name === fieldName) return { ...field, value: novoValor };
+          return field;
+        }),
+        errors: { ...prevState.errors, [fieldName]: errors }
+      }),
+      () => {
+        // console.log("Callback, pós atualizar o state");
+      }
+    );
+  };
 
     render() {
         return (
@@ -62,10 +114,10 @@ export class FormBuilder extends Component {
                         <View key={field.id}>
                             <TextInputSpot
                                 field={field}
-                                onChangeText={this.handlerChange(field.name)}
+                                onChangeText={this.handleChange(field.name)}
                             />
                             {fieldErrors.map(erroDoField => {
-                                return <Text key={field.id}>- {erroDoField.message}</Text>;
+                                return <Text key={erroDoField.message}>- {erroDoField.message}</Text>;
                             })}
                         </View>
                     );
@@ -91,6 +143,9 @@ const TextInputSpot = ({ field, onChangeText }) => {
         </View>
     );
 };
+
+
+
 
 const TextInputSpotStyle = StyleSheet.create({
     textInput: {
