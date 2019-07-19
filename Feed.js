@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, Text, View, Image, ScrollView } from 'react-native';
+import { Dimensions, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import CardPost from './src/components/CardPost';
 
 export class FeedScreen extends Component {
@@ -25,11 +25,23 @@ export class FeedScreen extends Component {
   render() {
    // console.warn( this.state.posts.length);
     return (
-      <ScrollView>
-        {this.state.posts.length ? null : <Text style={{fontSize:20}}>Cargando...</Text>}
-        {this.state.posts.map(function (post) {
-          return <CardPost key={post.id} post={post} />;
-        })}
+      <ScrollView style={{marginTop: 30}}>
+        {this.state.posts.map(post =>  {
+          return(
+          <TouchableOpacity
+            key={post.id}
+            onPress={ () => {
+              this.props.navigation.navigate("Inicial",{
+                postId:post.id,
+                post: post
+              });
+            }}
+           >
+             <CardPost post={post}/>
+           </TouchableOpacity>
+        );
+      })
+      }
       </ScrollView>
     );
   }

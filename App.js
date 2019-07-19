@@ -9,16 +9,19 @@ import { AuthScreen } from "./src/modules/Auth";
 const TelaInicial =(props) =>(
     <View>
         <Text>Tela Inicial</Text>
+        <Text>{JSON.stringify(props.navigation.state.params)}</Text>
+        <Text>ID do post: {props.navigation.getParam("postId", "NO-ID")}</Text>
         <Button
             title="Ver Detalhes"
             onPress={() => props.navigation.navigate("Detalhe")}
            />
     </View>
 );
-//Tela 2 
+//Tela 2 n
 const DetalheScreen =(props) =>(
     <View>
         <Text>Detalhes</Text>
+       
         <Button
             title="Voltar Inicio"
             onPress={() => props.navigation.navigate("Inicial")}
